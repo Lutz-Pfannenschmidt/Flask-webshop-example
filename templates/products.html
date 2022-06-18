@@ -1,103 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Webshop | Products</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <style>
-	/* Remove the navbar's default rounded borders and increase the bottom margin */ 
-	.navbar {
-	  margin-bottom: 50px;
-	  border-radius: 0;
-	}
-	
-	/* Remove the jumbotron's default bottom margin */ 
-	 .jumbotron {
-	  margin-bottom: 0;
-	}
-   
-	/* Add a gray background color and some padding to the footer */
-	footer {
-	  background-color: #f2f2f2;
-	  padding: 25px;
-	}
-  </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-<div class="jumbotron">
-  <div class="container text-center">
-	<h1>Online Store</h1>      
-	<p>Template by: <a href="https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_store&stacked=h">w3schools</a></p>
-  </div>
-</div>
+{% block title %}Products{% endblock title %}
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-	<div class="navbar-header">
-	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>
-		<span class="icon-bar"></span>                        
-	  </button>
-	  <a class="navbar-brand" href="#">Logo</a>
-	</div>
-	<div class="collapse navbar-collapse" id="myNavbar">
-	  <ul class="nav navbar-nav">
-		<li><a href="{{ root }}">Home</a></li>
-		<li class="active"><a href="#">Products</a></li>
-		<li><a href="#">Deals</a></li>
-		<li><a href="#">Stores</a></li>
-		<li><a href="#">Contact</a></li>
-	  </ul>
-	  <ul class="nav navbar-nav navbar-right">
-		<li><a href="#"><span class="glyphicon glyphicon-user"></span> Your Account</a></li>
-		<li><a href="{{ root }}cart"><span class="glyphicon glyphicon-shopping-cart"></span> Cart (<span id="items_in_cart">{{ cart }}</span>)</a></li>
-	  </ul>
-	</div>
-  </div>
-</nav>
-
-<!-- Hidden value with number of items in cart for easier incementation -->
-<input type="hidden" id="items_in_cart_hidden" value="{{ cart }}">
-
-<div class="container">    
-  <div class="row">
+{% block main %}
 
 	{% for item in items %}
 			<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6">
-			  <div class="panel panel-default my_panel">
-				<div class="panel-body">
-				  <img src="{{ item.img_url }}" alt="{{ item.img_url }}" class="img-responsive center-block"/>
+				<div class="panel panel-default my_panel">
+					<div class="panel-body">
+						<img src="{{ item.img_url }}" alt="{{ item.img_url }}" class="img-responsive center-block"/>
+					</div>
+					<div class="panel-footer">
+						<h3>{{ item.name }}</h3>
+						<h5 class="text-muted">{{ item.price[:-2] }}.{{ item.price[-2:] }}€</h5>
+						<p>{{ item.desc }}</p>
+						<a class="text-primary" href="#" onclick="add_to_cart('{{ item.id }}');">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
+					</div>
 				</div>
-				<div class="panel-footer">
-				  <h3>{{ item.name }}</h3>
-				  <h5 class="text-muted">{{ item.price[:-2] }}.{{ item.price[-2:] }}€</h5>
-				  <p>{{ item.desc }}</p>
-				  <a class="text-primary" href="#" onclick="add_to_cart('{{ item.id }}');">Add to cart <span class="glyphicon glyphicon-shopping-cart"></span></a>
-				</div>
-			  </div>
 			</div>
 	{% endfor %}
-	
-  </div>
-</div><br>
 
-<br>
+{% endblock main %}
 
-<footer class="container-fluid text-center">
-	<p>Online Store Copyright</p>  
-	<form action = "{{ root }}newsletter/apply" method = "post" class="form-inline">Abboniere meinen Newsletter:
-		<input type = "email" class = "form-control" size = "50" placeholder="email@example.com" name="email">
-		<input type = "submit" value = "Sign Up" class="btn btn-danger"/>
-	</form>
-</footer>
-
-</body>
-</html>
+{% block after %}
 <script>
 	function add_to_cart(item_id)
     {
@@ -121,3 +46,4 @@
 
     };
 </script>
+{% endblock after %}

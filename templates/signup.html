@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Signup{% endblock title %}
+
+{% block main %}
+
+	<div class="panel panel-default">
+		<!-- Default panel contents -->
+		<div class="panel-heading">Required Information</div>
+		<br><br>
+		<form class="form-horizontal" action = "{{ root }}signup" method = "post" >
+			<div class="form-group">
+				<label for="inputmail" class="col-sm-2 control-label">Email</label>
+				<div class="col-sm-7">
+					<input type="email" class="form-control" id="inputmail" placeholder="Email">
+				</div>
+			</div><br>
+			<div class="form-group">
+				<label for="inputuname" class="col-sm-2 control-label">Username</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="inputuname" placeholder="Username">
+				</div> <br><br>
+				<label for="inputname" class="col-sm-2 control-label">First name</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="inputname" placeholder="First name">
+				</div> <br><br>
+				<label for="inputlastname" class="col-sm-2 control-label">Last name</label>
+				<div class="col-sm-7">
+					<input type="text" class="form-control" id="inputlastname" placeholder="Last name">
+				</div>
+			</div><br>
+			<div class="form-group">
+				<label for="inputpassword" class="col-sm-2 control-label">Password</label>
+				<div class="col-sm-7">
+					<input type="password" class="form-control" id="inputpassword" placeholder="Password">
+				</div> <br><br>
+				<label for="inputpasswordconfirmation" class="col-sm-2 control-label">Confirm password</label>
+				<div class="col-sm-7">
+					<input type="password" class="form-control" id="inputpasswordconfirmation" placeholder="Confirm password">
+				</div>
+			</div><br>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default">Sign up</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+{% endblock main %}

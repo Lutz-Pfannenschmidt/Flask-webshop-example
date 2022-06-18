@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Webshop | Cart</title>
+  <title>Webshop | {% block title %}TEMPLATE FILE{% endblock title %}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -75,7 +75,7 @@
 						<li><a href="{{ root }}logout">Log out</a></li>
 						{% else %}
 						<li><a href="{{ root }}login">Log in</a></li>
-						<li><a href="{{ root }}signup">Sign up {{ session["cart"] }}</a></li>
+						<li><a href="{{ root }}signup">Sign up</a></li>
 						{% endif %}
 					</ul>
 				</li>
@@ -99,7 +99,7 @@
 
 <footer class="container-fluid text-center">
 	<p>Online Store Copyright</p>  
-	<form action = "{{ root }}newsletter/apply" method = "post" class="form-inline">Abboniere meinen Newsletter:
+	<form action = "{{ root }}newsletter/apply" method = "post" class="form-inline">Sign up for my Newsletter:
 		<input type = "email" class = "form-control" size = "50" placeholder="email@example.com" name="email">
 		<input type = "submit" value = "Sign Up" class="btn btn-danger"/>
 	</form>

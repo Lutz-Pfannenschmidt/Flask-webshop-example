@@ -61,7 +61,7 @@ def home():
         cart = len(eval(session["cart"]))
     # ---
         
-    return render_template("base.html", deals = deals, root = root, cart = cart)
+    return render_template("home.html", deals = deals, root = root, cart = cart)
 
 # --- PRODUCTS ---
 @app.route("/products")
@@ -84,14 +84,6 @@ def products():
 @app.route("/cart")
 def cart():
     
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps([])
-        cart = 0
-    else:
-        cart = len(eval(session["cart"]))
-    # ---
-    
     # Make an list of all items in the users cart
     cart = eval(session["cart"])
     items = []
@@ -100,6 +92,14 @@ def cart():
         item = Item.query.filter_by(id=id_).first()
         items.append(item)
         total = total + int(item.price)
+    # ---
+    
+    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
+    if type(session.get("cart")) == NoneType:
+        session["cart"] = js_dumps([])
+        cart = 0
+    else:
+        cart = len(eval(session["cart"]))
     # ---
         
     return render_template("cart.html", items = items, cart = cart, total = str(total))
@@ -137,7 +137,7 @@ def clear_cart():
     session["cart"] = js_dumps([])
     return resp
 
-# --- REGISTER ---
+# --- SIGNUP ---
 @app.route("/signup")
 def sign_up():
     # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
@@ -148,7 +148,7 @@ def sign_up():
         cart = len(eval(session["cart"]))
     # ---
     
-    resp = make_response(render_template("register.html", cart = cart, root = root))
+    resp = make_response(render_template("signup.html", cart = cart, root = root))
     return resp
 
 # --- NEWSLETTER ---
