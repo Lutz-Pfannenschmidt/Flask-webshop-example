@@ -2,10 +2,9 @@ from types import NoneType
 from flask import Flask, render_template, request, redirect, url_for, make_response, render_template_string, session
 from flask_sqlalchemy import SQLAlchemy
 from json import dumps as js_dumps
-import random
 
 app = Flask(__name__)
-app.secret_key = 'frsw¶uezÓƒhzodd╚iklcr¶uzjwoxpÓew9io5©»▒Y•468F5Ì▄Ì▓ªÁ'
+app.secret_key = 'super secret key'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SESSION_PERMANENT"] = False
@@ -118,7 +117,7 @@ def add_to_cart():
     
     return resp
 
-# --- REMOVE FROM CART ---
+# --- REMOVE FROM CART --- # Gets triggered automatically when the user presses the trashcan in the cart page
 @app.route("/remove_from_cart", methods = ["POST"])
 def remove_from_cart():
     item_id  = request.form.get('item_id')
@@ -131,7 +130,7 @@ def remove_from_cart():
     
     return resp
 
-# --- CLEAR CART ---
+# --- CLEAR CART --- # Gets triggered automatically when the user presses "Clear Cart"
 @app.route("/clear_cart", methods = ["POST"])
 def clear_cart():
     resp = make_response(redirect(url_for("cart")))
