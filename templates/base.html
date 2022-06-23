@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Webshop | {% block title %}TEMPLATE FILE{% endblock title %}</title>
+  <title>Online Store | {% block title %}TEMPLATE FILE{% endblock title %}</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -41,7 +41,7 @@
 
 <div class="jumbotron">
   <div class="container text-center">
-    <h1>Online Store</h1>      
+    <h1>Online Store | {{ self.title() }}</h1>
     <p>HTML Template by: <a href="https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_store&stacked=w">w3schools</a></p>
   </div>
 </div>
@@ -75,7 +75,7 @@
 						<li><a href="{{ root }}logout">Log out</a></li>
 						{% else %}
 						<li><a href="{{ root }}login">Log in</a></li>
-						<li><a href="{{ root }}signup">Sign up</a></li>
+						<li><a href="{{ root }}register">Create an Account</a></li>
 						{% endif %}
 					</ul>
 				</li>

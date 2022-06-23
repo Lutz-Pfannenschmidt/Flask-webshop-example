@@ -13,6 +13,9 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 
 
+# CURRENTLY MAKING FORM VALIDATION STUFF
+
+
 db = SQLAlchemy(app)
 
 root = "http://localhost:80/"
@@ -140,44 +143,62 @@ def clear_cart():
     session["cart"] = js_dumps([])
     return resp
 
-# --- SIGNUP ---
-@app.route("/signup", methods = ["POST", "GET"])
+# --- REGISTER ---
+@app.route("/register", methods = ["POST", "GET"])
 def sign_up():
+    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
+    if type(session.get("cart")) == NoneType:
+        session["cart"] = js_dumps([])
+        cart = 0
+    else:
+        cart = len(ast.literal_eval(session["cart"]))
+    # ---
     if request.method == "GET":
-        # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-        if type(session.get("cart")) == NoneType:
-            session["cart"] = js_dumps([])
-            cart = 0
-        else:
-            cart = len(ast.literal_eval(session["cart"]))
-        # ---
         
-        resp = make_response(render_template("signup.html", cart = cart, root = root))
+        resp = make_response(render_template("register.html", cart = cart, root = root, msg = [["",""],["",""],["",""],["",""],["",""]]))
         return resp
     else:
-        mail  = request.form.get('inputmail')
+        email  = request.form.get('inputmail')
         uname  = request.form.get('inputuname')
         firstname  = request.form.get('inputname')
         lastname  = request.form.get('inputlastname')
         pwd  = request.form.get('inputpassword')
         pwd2  = request.form.get('inputpasswordconfirmation')
-        """
-        if not re.match(r"^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])\x22))\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])\x5d))(.\w{2,})+$", email):
-            return "invalid mail"
-        if not len(uname) >= 3:
-            return "invalid uname"
-        if not len(firstname) > 0:
-            return "invalid name"
-        if not len(lastname) > 0:
-            return "invalid lastname"
-        if not len(pwd) > 8:
-            return "pwd to short"
-        if not len(pwd) <= 99:
-            return "pwd to long"
-        if not pwd == pwd2:
-            return "pwd != pwd2"""
         
-        return str(Item.query.filter_by(price=uname).all())
+        msg = []
+        error = False
+        # Will be cleaned up later
+        if not re.match(r"""(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])""", email):
+            error = True
+            msg.append(["error", email, "Please provide a valid email adress"])
+        else:
+            msg.append(["success", email, ""])
+        if not len(uname) >= 3:
+            error = True
+            msg.append(["error", uname, "Username must be at least 3 characters"])
+        else:
+            msg.append(["success", uname, ""])
+        if not len(firstname) > 0:
+            error = True
+            msg.append(["error", firstname, "Please provide an name"])
+        else:
+            msg.append(["success", firstname, ""])
+        if not len(lastname) > 0:
+            error = True
+            msg.append(["error", lastname], "Please provide an name")
+        else:
+            msg.append(["success", lastname, ""])
+            
+        if not len(pwd) > 8 or not len(pwd) <= 99 or not pwd == pwd2:
+            error = True
+            msg.append(["error", "", "Password must be at least 8 characters (max.99)<br>Passwords do not match"])
+        else:
+            msg.append(["success", pwd])
+            
+        if error:
+            resp = make_response(render_template("register.html", cart = cart, root = root, msg = msg))
+            return resp
+        return "valid"
 
 # --- NEWSLETTER ---
 #TODO: better newsletter stuff
