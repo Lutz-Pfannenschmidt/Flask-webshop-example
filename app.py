@@ -2,6 +2,8 @@ from types import NoneType
 from flask import Flask, render_template, request, redirect, url_for, make_response, render_template_string, session
 from flask_sqlalchemy import SQLAlchemy
 from json import dumps as js_dumps
+import ast
+import re
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -46,7 +48,6 @@ deals = [
     ["deal2", "2% off with code:'deal2'"]
 ]
 
-
 # --- HOME ---
 @app.route("/home")
 def home_redirect():
@@ -58,9 +59,11 @@ def home():
         session["cart"] = js_dumps([])
         cart = 0
     else:
-        cart = len(eval(session["cart"]))
+        cart = len(ast.literal_eval(session["cart"]))
     # ---
-        
+
+    session["account"] = "lul"
+    session.pop("account")
     return render_template("home.html", deals = deals, root = root, cart = cart)
 
 # --- PRODUCTS ---
@@ -72,7 +75,7 @@ def products():
         session["cart"] = js_dumps([])
         cart = 0
     else:
-        cart = len(eval(session["cart"]))
+        cart = len(ast.literal_eval(session["cart"]))
     # ---
     
     # Get products from database
@@ -85,7 +88,7 @@ def products():
 def cart():
     
     # Make an list of all items in the users cart
-    cart = eval(session["cart"])
+    cart = ast.literal_eval(session["cart"])
     items = []
     total = 0
     for id_ in cart:
@@ -99,7 +102,7 @@ def cart():
         session["cart"] = js_dumps([])
         cart = 0
     else:
-        cart = len(eval(session["cart"]))
+        cart = len(ast.literal_eval(session["cart"]))
     # ---
         
     return render_template("cart.html", items = items, cart = cart, total = str(total))
@@ -109,7 +112,7 @@ def cart():
 def add_to_cart():
     item_id  = request.form.get('item_id')
     
-    cart = eval(session["cart"])
+    cart = ast.literal_eval(session["cart"])
     cart.append(str(item_id))
     
     resp = make_response(render_template_string("success"))
@@ -122,7 +125,7 @@ def add_to_cart():
 def remove_from_cart():
     item_id  = request.form.get('item_id')
     
-    cart = eval(session["cart"])
+    cart = ast.literal_eval(session["cart"])
     cart.remove(str(item_id))
     
     resp = make_response(render_template_string("success"))
@@ -138,18 +141,43 @@ def clear_cart():
     return resp
 
 # --- SIGNUP ---
-@app.route("/signup")
+@app.route("/signup", methods = ["POST", "GET"])
 def sign_up():
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps([])
-        cart = 0
+    if request.method == "GET":
+        # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
+        if type(session.get("cart")) == NoneType:
+            session["cart"] = js_dumps([])
+            cart = 0
+        else:
+            cart = len(ast.literal_eval(session["cart"]))
+        # ---
+        
+        resp = make_response(render_template("signup.html", cart = cart, root = root))
+        return resp
     else:
-        cart = len(eval(session["cart"]))
-    # ---
-    
-    resp = make_response(render_template("signup.html", cart = cart, root = root))
-    return resp
+        mail  = request.form.get('inputmail')
+        uname  = request.form.get('inputuname')
+        firstname  = request.form.get('inputname')
+        lastname  = request.form.get('inputlastname')
+        pwd  = request.form.get('inputpassword')
+        pwd2  = request.form.get('inputpasswordconfirmation')
+        """
+        if not re.match(r"^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])\x22))\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])\x5d))(.\w{2,})+$", email):
+            return "invalid mail"
+        if not len(uname) >= 3:
+            return "invalid uname"
+        if not len(firstname) > 0:
+            return "invalid name"
+        if not len(lastname) > 0:
+            return "invalid lastname"
+        if not len(pwd) > 8:
+            return "pwd to short"
+        if not len(pwd) <= 99:
+            return "pwd to long"
+        if not pwd == pwd2:
+            return "pwd != pwd2"""
+        
+        return str(Item.query.filter_by(price=uname).all())
 
 # --- NEWSLETTER ---
 #TODO: better newsletter stuff

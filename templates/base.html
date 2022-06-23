@@ -42,7 +42,7 @@
 <div class="jumbotron">
   <div class="container text-center">
     <h1>Online Store</h1>      
-    <p>Template by: <a href="https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_store&stacked=w">w3schools</a></p>
+    <p>HTML Template by: <a href="https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_store&stacked=w">w3schools</a></p>
   </div>
 </div>
 
@@ -67,7 +67,7 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle dropdown-header" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> Your Account <span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						{% if user %}
+						{% if session["account"] %}
 						<li><a href="{{ root }}account">Dashboard</a></li>
 						<li><a href="{{ root }}account/orders">Orders</a></li>
 						<li><a href="{{ root }}account/settings">Settings</a></li>
@@ -79,7 +79,7 @@
 						{% endif %}
 					</ul>
 				</li>
-				<li class="active"><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> Cart (<span id="items_in_cart">{{ cart }}</span>)</a></li>
+				<li><a href="{{ root }}cart"><span class="glyphicon glyphicon-shopping-cart"></span> Cart (<span id="items_in_cart">{{ cart }}</span>)</a></li>
 			</ul>
 		</div>
 	</div>
