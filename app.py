@@ -6,6 +6,8 @@ from flask_bcrypt import Bcrypt
 from json import dumps as js_dumps
 import ast
 import re
+from werkzeug.exceptions import HTTPException
+from http.client import responses
 
 app = Flask(__name__)
 app.secret_key = 'super secret key'
@@ -255,6 +257,17 @@ def verify(id="none"):
         return f"Please verify your email '{id}'"
     else:
         return redirect(url_for('home'))
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    error = responses[code]
+    return render_template(
+        "base.html",
+        error = f"{code} - {error}"
+    )
 
 if __name__ == "__main__":
     #db.create_all()

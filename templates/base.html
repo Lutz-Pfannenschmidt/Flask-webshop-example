@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Online Store | {% block title %}TEMPLATE FILE{% endblock title %}</title>
+  <title>{% if not error %}Online Store | {% block title %}TEMPLATE FILE{% endblock title %}{% else %}{{ error }}{% endif %}</title>
   <link rel="shortcut icon" href="{{ root }}static/favicon.png">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -42,7 +42,7 @@
 
 <div class="jumbotron">
   <div class="container text-center">
-    <h1>Online Store | {{ self.title() }}</h1>
+    <h1>{% if not error %}Online Store | {{ self.title() }}{% else %}{{ error }}{% endif %}</h1>
     <p>HTML & Bootstrap Template by: <a href="https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_temp_store&stacked=w">w3schools</a></p>
   </div>
 </div>
