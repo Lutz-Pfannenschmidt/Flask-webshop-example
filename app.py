@@ -75,9 +75,8 @@ def home_redirect():
 @app.route("/")
 def home():
     cart = check_cart_session()
-
-    session["account"] = "lul"
-    session.pop("account")
+    
+    print(session)
     return render_template("home.html", deals = deals, root = root, cart = cart)
 
 # --- PRODUCTS ---
@@ -225,7 +224,22 @@ def login():
         resp = make_response(render_template("login.html", cart = cart, root = root, msg = [["",""],["",""]]))
         return resp
     else:
-        return "ok"
+        uname  = request.form.get('inputuname')
+        pwd  = request.form.get('inputpassword')
+        
+        user = User.query.filter_by(username=uname).first()
+        
+        if user == None:
+            return "no user with this name"
+        
+        if bcrypt.check_password_hash(user.password_hash, pwd):
+            session["account"] = str(user.username)
+            print(session)
+            return redirect(url_for("home"))
+        else:
+            return "Wrong password"
+        
+        return redirect(url_for("home"))
 
 # --- NEWSLETTER ---
 #TODO: better newsletter stuff

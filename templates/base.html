@@ -67,14 +67,14 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle dropdown-header" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> Your Account <span class="caret"></span></a>
 					<ul class="dropdown-menu">
-						{% if session["account"] %}
+						{% if "account" in session.keys() %}
 						<li><a href="{{ root }}account">Dashboard</a></li>
 						<li><a href="{{ root }}account/orders">Orders</a></li>
 						<li><a href="{{ root }}account/settings">Settings</a></li>
 						<li role="separator" class="divider"></li>
 						<li><a href="{{ root }}logout">Log out</a></li>
 						{% else %}
-						<li><a href="{{ root }}login">Log in</a></li>
+						<li><a href="{{ root }}login"></a></li>
 						<li><a href="{{ root }}register">Create an Account</a></li>
 						{% endif %}
 					</ul>
