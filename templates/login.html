@@ -85,27 +85,10 @@
 						required
 					>
 				</div> <br><br>
-				<label for="inputpasswordconfirmation" class="col-sm-2 control-label {% if msg[4][0] == "success" %}custom_success{% elif msg[4][0] == "error" %}custom_error{% endif %}">Confirm Password</label>
-				<div class="col-sm-7">
-					<input
-						value="{{ msg[4][1] }}"
-						type="password"
-						class="form-control {% if msg[4][0] == "success" %}custom_success{% elif msg[4][0] == "error" %}custom_error{% endif %}"
-						id="inputpasswordconfirmation"
-						placeholder="Password"
-						name="inputpasswordconfirmation"
-						minlength="8"
-						maxlength="99"
-						pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$"
-						title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number. Must be the same as Password"
-						required
-					>
-					<span class="custom_hint">{{ msg[4][2]|safe }}</span>
-				</div>
 			</div><br>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default">Register</button>
+					<button type="submit" class="btn btn-default">Log in</button>
 				</div>
 			</div>
 		</form>
