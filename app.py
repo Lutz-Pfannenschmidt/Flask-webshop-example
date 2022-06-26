@@ -44,6 +44,23 @@ class User(db.Model):
     blocked = db.Column(db.String(1), unique=False, nullable=False, default=0)
     password_hash = db.Column(db.String(60), unique=False, nullable=False)
     permission_level = db.Column(db.Integer, unique=False, nullable=False, default=0)
+    cart = db.Column(db.String(999), unique=False, nullable=True)
+
+
+def check_cart_session():
+    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
+    if type(session.get("cart")) == NoneType:
+        session["cart"] = js_dumps({})
+        session.permanent = True
+        cart = 0
+    else:
+        cart = ast.literal_eval(session["cart"])
+        items_in_cart = 0
+        for key in cart:
+            items_in_cart = items_in_cart + cart[key]
+        cart = items_in_cart
+    return cart
+
 
 
 deals = [
@@ -57,18 +74,7 @@ def home_redirect():
     return redirect(url_for("home"))
 @app.route("/")
 def home():
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps({})
-        session.permanent = True
-        cart = 0
-    else:
-        cart = ast.literal_eval(session["cart"])
-        items_in_cart = 0
-        for key in cart:
-            items_in_cart = items_in_cart + cart[key]
-        cart = items_in_cart
-    # ---
+    cart = check_cart_session()
 
     session["account"] = "lul"
     session.pop("account")
@@ -78,18 +84,7 @@ def home():
 @app.route("/products")
 def products():
     
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps({})
-        session.permanent = True
-        cart = 0
-    else:
-        cart = ast.literal_eval(session["cart"])
-        items_in_cart = 0
-        for key in cart:
-            items_in_cart = items_in_cart + cart[key]
-        cart = items_in_cart
-    # ---
+    cart = check_cart_session()
     
     # Get products from database
     items = Item.query.limit(36).all()
@@ -100,7 +95,7 @@ def products():
 @app.route("/cart")
 def cart():
     
-    # Make an list of all items in the users cart # TODO:FIX FOR DICT
+    # Make an list of all items in the users cart
     cart = ast.literal_eval(session["cart"])
     items = []
     total = 0
@@ -110,18 +105,7 @@ def cart():
         total = total + int(item.price) * cart[key]
     # ---
     
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps({})
-        session.permanent = True
-        cart = 0
-    else:
-        cart = ast.literal_eval(session["cart"])
-        items_in_cart = 0
-        for key in cart:
-            items_in_cart = items_in_cart + cart[key]
-        cart = items_in_cart
-    # ---
+    cart = check_cart_session()
         
     return render_template("cart.html", items = items, cart = cart, total = str(total))
 
@@ -170,18 +154,7 @@ def clear_cart():
 # --- REGISTER ---
 @app.route("/register", methods = ["POST", "GET"])
 def register():
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps({})
-        session.permanent = True
-        cart = 0
-    else:
-        cart = ast.literal_eval(session["cart"])
-        items_in_cart = 0
-        for key in cart:
-            items_in_cart = items_in_cart + cart[key]
-        cart = items_in_cart
-    # ---
+    cart = check_cart_session()
     if request.method == "GET":
         
         resp = make_response(render_template("register.html", cart = cart, root = root, msg = [["",""],["",""],["",""],["",""],["",""]]))
@@ -227,6 +200,9 @@ def register():
         if error:
             resp = make_response(render_template("register.html", cart = cart, root = root, msg = msg))
             return resp
+        
+        #TODO: email / username checking on account creation
+        
         db.session.add(
             User(
                 username=uname,
@@ -240,20 +216,16 @@ def register():
         return redirect(url_for("login"))
 
 # --- LOG IN ---
-@app.route("/login", methods = ["GET"])
+@app.route("/login", methods = ["Post", "GET"])
 def login():
-    # Get number of items in the cart for display in navbar and add "cart" sessoin if not present
-    if type(session.get("cart")) == NoneType:
-        session["cart"] = js_dumps({})
-        session.permanent = True
-        cart = 0
+    if request.method == "GET":
+        cart = check_cart_session()
+        
+        
+        resp = make_response(render_template("login.html", cart = cart, root = root, msg = [["",""],["",""]]))
+        return resp
     else:
-        cart = ast.literal_eval(session["cart"])
-        items_in_cart = 0
-        for key in cart:
-            items_in_cart = items_in_cart + cart[key]
-        cart = items_in_cart
-    # ---
+        return "ok"
 
 # --- NEWSLETTER ---
 #TODO: better newsletter stuff

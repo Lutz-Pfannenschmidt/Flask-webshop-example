@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Register{% endblock title %}
+{% block title %}Login{% endblock title %}
 
 {% block main %}
 
@@ -8,29 +8,14 @@
 		<!-- Default panel contents -->
 		<div class="panel-heading">Required Information</div>
 		<br><br>
-		<form class="form-horizontal" action = "{{ root }}register" method = "post" >
+		<form class="form-horizontal" action = "{{ root }}login" method = "post" >
 			<div class="form-group">
-				<label for="inputmail" class="col-sm-2 control-label {% if msg[0][0] == "success" %}custom_success{% elif msg[0][0] == "error" %}custom_error{% endif %}">Email</label>
+				<label for="inputuname" class="col-sm-2 control-label {% if msg[0][0] == "success" %}custom_success{% elif msg[0][0] == "error" %}custom_error{% endif %}">Username</label>
 				<div class="col-sm-7">
 					<input
 						value="{{ msg[0][1] }}"
-						type="email"
-						class="form-control {% if msg[0][0] == "success" %}custom_success{% elif msg[0][0] == "error" %}custom_error{% endif %}"
-						id="inputmail"
-						placeholder="Email"
-						name="inputmail"
-						required
-					>
-					<span class="custom_hint">{{ msg[0][2] }}</span>
-				</div>
-			</div><br>
-			<div class="form-group">
-				<label for="inputuname" class="col-sm-2 control-label {% if msg[1][0] == "success" %}custom_success{% elif msg[1][0] == "error" %}custom_error{% endif %}">Username</label>
-				<div class="col-sm-7">
-					<input
-						value="{{ msg[1][1] }}"
 						type="text"
-						class="form-control {% if msg[1][0] == "success" %}custom_success{% elif msg[1][0] == "error" %}custom_error{% endif %}"
+						class="form-control {% if msg[0][0] == "success" %}custom_success{% elif msg[0][0] == "error" %}custom_error{% endif %}"
 						id="inputuname"
 						placeholder="Username"
 						name="inputuname"
@@ -39,42 +24,16 @@
 						maxlength="12"
 						autocomplete="off"
 					>
-					<span class="custom_hint">{{ msg[1][2] }}</span>
+					<span class="custom_hint">{{ msg[0][2] }}</span>
 				</div> <br><br>
-				<label for="inputname" class="col-sm-2 control-label {% if msg[2][0] == "success" %}custom_success{% elif msg[2][0] == "error" %}custom_error{% endif %}">First name</label>
-				<div class="col-sm-7">
-					<input
-						value="{{ msg[2][1] }}"
-						type="text"
-						class="form-control {% if msg[2][0] == "success" %}custom_success{% elif msg[2][0] == "error" %}custom_error{% endif %}"
-						id="inputname"
-						placeholder="First name"
-						name="inputname"
-						required
-					>
-					<span class="custom_hint">{{ msg[2][2] }}</span>
-				</div> <br><br>
-				<label for="inputlastname" class="col-sm-2 control-label {% if msg[3][0] == "success" %}custom_success{% elif msg[3][0] == "error" %}custom_error{% endif %}">Last name</label>
-				<div class="col-sm-7">
-					<input
-						value="{{ msg[3][1] }}"
-						type="text"
-						class="form-control {% if msg[3][0] == "success" %}custom_success{% elif msg[3][0] == "error" %}custom_error{% endif %}"
-						id="inputlastname"
-						placeholder="Last name"
-						name="inputlastname"
-						required
-					>
-					<span class="custom_hint">{{ msg[3][2] }}</span>
-				</div>
 			</div><br>
 			<div class="form-group">
-				<label for="inputpassword" class="col-sm-2 control-label {% if msg[4][0] == "success" %}custom_success{% elif msg[4][0] == "error" %}custom_error{% endif %}">Password</label>
+				<label for="inputpassword" class="col-sm-2 control-label {% if msg[1][0] == "success" %}custom_success{% elif msg[1][0] == "error" %}custom_error{% endif %}">Password</label>
 				<div class="col-sm-7">
 					<input
-						value="{{ msg[4][1] }}"
+						value="{{ msg[1][1] }}"
 						type="password"
-						class="form-control {% if msg[4][0] == "success" %}custom_success{% elif msg[4][0] == "error" %}custom_error{% endif %}"
+						class="form-control {% if msg[1][0] == "success" %}custom_success{% elif msg[1][0] == "error" %}custom_error{% endif %}"
 						id="inputpassword"
 						placeholder="Password"
 						name="inputpassword"
