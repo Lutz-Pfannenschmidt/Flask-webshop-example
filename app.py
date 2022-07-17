@@ -1,4 +1,3 @@
-from email.policy import default
 from types import NoneType
 from flask import Flask, render_template, request, redirect, url_for, make_response, render_template_string, session
 from flask_sqlalchemy import SQLAlchemy
@@ -63,8 +62,6 @@ def check_cart_session():
         cart = items_in_cart
     return cart
 
-
-
 deals = [
     ["deal1", "1% off with code:'deal1'"],
     ["deal2", "2% off with code:'deal2'"]
@@ -74,6 +71,7 @@ deals = [
 @app.route("/home")
 def home_redirect():
     return redirect(url_for("home"))
+
 @app.route("/")
 def home():
     cart = check_cart_session()
@@ -216,7 +214,7 @@ def register():
         return redirect(url_for("login"))
 
 # --- LOG IN ---
-@app.route("/login", methods = ["Post", "GET"])
+@app.route("/login", methods = ["POST", "GET"])
 def login():
     if request.method == "GET":
         cart = check_cart_session()
@@ -241,6 +239,12 @@ def login():
         
         return redirect(url_for("home"))
 
+# --- LOG OUT ---
+@app.route("/logout", methods = ["GET"])
+def logout():
+    session.pop("account")
+    return redirect(url_for("home"))
+
 # --- NEWSLETTER ---
 #TODO: better newsletter stuff
 @app.route('/newsletter/apply', methods = ["POST", "GET"])
@@ -258,17 +262,22 @@ def verify(id="none"):
     else:
         return redirect(url_for('home'))
 
+# --- ERROR HANDLING ---
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
     if isinstance(e, HTTPException):
         code = e.code
     error = responses[code]
+    
     if code == 404:
         error = "Page Not Found" # The built-in error response says "Not Found"
+        
     return render_template(
         "base.html",
-        error = f"{code} - {error}"
+        error = f"{code} - {error}",
+        cart = check_cart_session(),
+        root = root
     )
 
 if __name__ == "__main__":
