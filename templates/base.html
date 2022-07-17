@@ -66,7 +66,11 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right ">
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle dropdown-header" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> Your Account <span class="caret"></span></a>
+					<a href="#" class="dropdown-toggle dropdown-header" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+						<span class="glyphicon glyphicon-user"></span>
+						{% if "account" in session.keys() %} {{ session["account"] }} {% else %} Your Account {% endif %}
+						<span class="caret"></span>
+					</a>
 					<ul class="dropdown-menu">
 						{% if "account" in session.keys() %}
 						<li><a href="{{ root }}account">Dashboard</a></li>
@@ -75,7 +79,8 @@
 						<li role="separator" class="divider"></li>
 						<li><a href="{{ root }}logout">Log out</a></li>
 						{% else %}
-						<li><a href="{{ root }}login"></a></li>
+						<li><a href="{{ root }}login">Login</a></li>
+						<li role="separator" class="divider"></li>
 						<li><a href="{{ root }}register">Create an Account</a></li>
 						{% endif %}
 					</ul>
