@@ -264,6 +264,8 @@ def handle_error(e):
     if isinstance(e, HTTPException):
         code = e.code
     error = responses[code]
+    if code == 404:
+        error = "Page Not Found" # The built-in error response says "Not Found"
     return render_template(
         "base.html",
         error = f"{code} - {error}"
